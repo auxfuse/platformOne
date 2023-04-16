@@ -7,7 +7,8 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
 }
 
 body {
@@ -18,31 +19,64 @@ body {
 #countdown {
     min-height: 100vh;
     overflow: hidden;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     font-size: 1.8rem;
     text-align: center;
 }
 
 .txt {
     font-size: 2rem;
-    animation: clr-change 10s infinite ease-in-out;
+    -webkit-animation: clr-change 10s infinite ease-in-out;
+            animation: clr-change 10s infinite ease-in-out;
+}
+
+@-webkit-keyframes clr-change {
+    0% {
+        -webkit-filter: hue-rotate(180deg);
+                filter: hue-rotate(180deg);
+    }
+    25% {
+        -webkit-filter: hue-rotate(270deg);
+                filter: hue-rotate(270deg);
+    }
+    75% {
+        -webkit-filter: hue-rotate(360deg);
+                filter: hue-rotate(360deg);
+    }
+    100% {
+        -webkit-filter: hue-rotate(90deg);
+                filter: hue-rotate(90deg);
+    }
 }
 
 @keyframes clr-change {
     0% {
-        filter: hue-rotate(180deg);
+        -webkit-filter: hue-rotate(180deg);
+                filter: hue-rotate(180deg);
     }
     25% {
-        filter: hue-rotate(270deg);
+        -webkit-filter: hue-rotate(270deg);
+                filter: hue-rotate(270deg);
     }
     75% {
-        filter: hue-rotate(360deg);
+        -webkit-filter: hue-rotate(360deg);
+                filter: hue-rotate(360deg);
     }
     100% {
-        filter: hue-rotate(90deg);
+        -webkit-filter: hue-rotate(90deg);
+                filter: hue-rotate(90deg);
     }
 }
 
