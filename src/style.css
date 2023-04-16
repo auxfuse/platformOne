@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
 
+:root {
+    --bg: rgb(22, 21, 21);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,7 +12,7 @@
 
 body {
     font-family: 'Nabla', sans-serif;
-    background: black;
+    background: var(--bg);
 }
 
 #countdown {
@@ -18,11 +22,12 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 4rem;
+    font-size: 1.8rem;
+    text-align: center;
 }
 
 .txt {
-    font-size: 6rem;
+    font-size: 2rem;
     animation: clr-change 10s infinite ease-in-out;
 }
 
@@ -38,5 +43,45 @@ body {
     }
     100% {
         filter: hue-rotate(90deg);
+    }
+}
+
+@media (min-width: 36em) {
+    #countdown {
+        font-size: 2rem;
+    }
+
+    .txt {
+        font-size: 4rem;
+    }
+}
+
+@media (min-width: 48em) {
+    #countdown {
+        font-size: 2.8rem;
+    }
+
+    .txt {
+        font-size: 4.8rem;
+    }
+}
+
+@media (min-width: 62em) {
+    #countdown {
+        font-size: 3.5rem;
+    }
+
+    .txt {
+        font-size: 5.5rem;
+    }
+}
+
+@media (min-width: 75em) {
+    #countdown {
+        font-size: 4rem;
+    }
+
+    .txt {
+        font-size: 6rem;
     }
 }
