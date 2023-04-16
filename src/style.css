@@ -1,19 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nabla&family=Press+Start+2P&display=swap');
 
 :root {
     --bg: rgb(22, 21, 21);
+    --neon: rgb(42, 240, 92);
+
+    --font: 'Nabla', sans-serif;
+    --font-backup: 'Press Start 2P', sans-serif;
 }
 
 * {
     margin: 0;
     padding: 0;
     -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Nabla', sans-serif;
+    font-family: var(--font);
     background: var(--bg);
+    color: var(--neon);
 }
 
 #countdown {
@@ -24,14 +29,14 @@ body {
     display: flex;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
     -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
     -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
     font-size: 1.8rem;
     text-align: center;
 }
@@ -45,38 +50,38 @@ body {
 @-webkit-keyframes clr-change {
     0% {
         -webkit-filter: hue-rotate(180deg);
-                filter: hue-rotate(180deg);
+        filter: hue-rotate(180deg);
     }
     25% {
         -webkit-filter: hue-rotate(270deg);
-                filter: hue-rotate(270deg);
+        filter: hue-rotate(270deg);
     }
     75% {
         -webkit-filter: hue-rotate(360deg);
-                filter: hue-rotate(360deg);
+        filter: hue-rotate(360deg);
     }
     100% {
         -webkit-filter: hue-rotate(90deg);
-                filter: hue-rotate(90deg);
+        filter: hue-rotate(90deg);
     }
 }
 
 @keyframes clr-change {
     0% {
         -webkit-filter: hue-rotate(180deg);
-                filter: hue-rotate(180deg);
+        filter: hue-rotate(180deg);
     }
     25% {
         -webkit-filter: hue-rotate(270deg);
-                filter: hue-rotate(270deg);
+        filter: hue-rotate(270deg);
     }
     75% {
         -webkit-filter: hue-rotate(360deg);
-                filter: hue-rotate(360deg);
+        filter: hue-rotate(360deg);
     }
     100% {
         -webkit-filter: hue-rotate(90deg);
-                filter: hue-rotate(90deg);
+        filter: hue-rotate(90deg);
     }
 }
 
@@ -119,3 +124,18 @@ body {
         font-size: 6rem;
     }
 }
+
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+    body {
+      font-family: var(--font-backup);
+    }
+
+    #countdown {
+        font-size: 1.2rem;
+        line-height: 2rem;
+    }
+
+    .txt {
+        font-size: 1.6rem;
+    }
+  }
