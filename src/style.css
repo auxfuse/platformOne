@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nabla', sans-serif;
+    background: black;
+}
+
+#countdown {
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 4rem;
+}
+
+.txt {
+    font-size: 6rem;
+    animation: clr-change 10s infinite ease-in-out;
+}
+
+@keyframes clr-change {
+    0% {
+        filter: hue-rotate(180deg);
+    }
+    25% {
+        filter: hue-rotate(270deg);
+    }
+    75% {
+        filter: hue-rotate(360deg);
+    }
+    100% {
+        filter: hue-rotate(90deg);
+    }
+}
