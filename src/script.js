@@ -20,7 +20,7 @@ const scene = new THREE.Scene();
 const params = {
     count: 50000,
     size: 0.001,
-    radius: 6,
+    radius: 10,
     branches: 6,
     spin: -1,
     randomness: 0.2,
@@ -95,10 +95,15 @@ const genGalaxy = () => {
     });
 
     points = new THREE.Points(geometry, material);
+    points.position.x = -4.5;
+    points.position.z = -4.5;
     scene.add(points);
 };
 
 genGalaxy();
+
+// const axesHelper = new THREE.AxesHelper( 5 );
+// scene.add( axesHelper );
 
 gui.add(params, 'count').min(100).max(1000000).step(100).onFinishChange(genGalaxy);
 gui.add(params, 'size').min(0.001).max(0.1).step(0.001).onFinishChange(genGalaxy);
