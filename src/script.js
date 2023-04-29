@@ -4,6 +4,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import GUI from 'lil-gui';
 
 const gui = new GUI();
+gui.close();
+gui.title('Try Me!');
 
 const canvas = document.querySelector('canvas.webgl');
 
