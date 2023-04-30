@@ -1,6 +1,8 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import galaxyVertexShader from './shaders/galaxy/vertex.glsl';
+import galaxyFragmentShader from './shaders/galaxy/fragment.glsl';
 import GUI from 'lil-gui';
 
 const gui = new GUI();
@@ -48,6 +50,8 @@ const genGalaxy = () => {
 
     const positions = new Float32Array(params.count * 3);
     const colors = new Float32Array(params.count * 3);
+    const scales = new Float32Array(params.count * 1);
+    const randomness = new Float32Array(params.count * 3);
 
     const colorInside = new THREE.Color(colorsM.insideColor);
     const colorOutside = new THREE.Color(colorsM.outsideColor);
@@ -57,16 +61,19 @@ const genGalaxy = () => {
         const i3 = i * 3;
 
         const radius = Math.random() * params.radius;
-        const spinAngle = radius * params.spin;
         const branchAngle = (i % params.branches) / params.branches * Math.PI * 2;
 
-        const randomX = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
-        const randomY = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
-        const randomZ = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1);
+        const randomX = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
+        const randomY = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
+        const randomZ = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
 
-        positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
-        positions[i3 + 1] = 0 + randomY;
-        positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+        positions[i3] = Math.cos(branchAngle) * radius;
+        positions[i3 + 1] = 0;
+        positions[i3 + 2] = Math.sin(branchAngle) * radius;
+
+        randomness[i3] = randomX;
+        randomness[i3 + 1] = randomY;
+        randomness[i3 + 2] = randomZ;
 
         const mixedColor = colorInside.clone();
         mixedColor.lerp(colorOutside, radius / params.radius);
@@ -74,6 +81,8 @@ const genGalaxy = () => {
         colors[i3] = mixedColor.r;
         colors[i3 + 1] = mixedColor.g;
         colors[i3 + 2] = mixedColor.b;
+
+        scales[i] = Math.random();
     };
 
     geometry.setAttribute(
@@ -86,12 +95,27 @@ const genGalaxy = () => {
         new THREE.BufferAttribute(colors, 3)
     );
 
-    material = new THREE.PointsMaterial({
-        size: params.size,
-        sizeAttenuation: true,
+    geometry.setAttribute(
+        'aScale',
+        new THREE.BufferAttribute(scales, 1)
+    )
+
+    geometry.setAttribute(
+        'aRandomness',
+        new THREE.BufferAttribute(randomness, 1)
+    )
+
+    material = new THREE.ShaderMaterial({
         depthWrite: false,
+        transparent: true,
         blending: THREE.AdditiveBlending,
-        vertexColors: true
+        vertexColors: true,
+        vertexShader: galaxyVertexShader,
+        fragmentShader: galaxyFragmentShader,
+        uniforms: {
+            uTime: { value: 0 },
+            uSize: { value: 30 * renderer.getPixelRatio() }
+        }
     });
 
     points = new THREE.Points(geometry, material);
@@ -100,10 +124,8 @@ const genGalaxy = () => {
     scene.add(points);
 };
 
-genGalaxy();
-
-// const axesHelper = new THREE.AxesHelper( 5 );
-// scene.add( axesHelper );
+const axesHelper = new THREE.AxesHelper( 5 );
+scene.add( axesHelper );
 
 gui.add(params, 'count').min(100).max(1000000).step(100).onFinishChange(genGalaxy);
 gui.add(params, 'size').min(0.001).max(0.1).step(0.001).onFinishChange(genGalaxy);
@@ -114,6 +136,17 @@ gui.add(params, 'randomness').min(0.01).max(2).step(0.01).onFinishChange(genGala
 gui.add(params, 'randomnessPower').min(1).max(10).step(0.1).onFinishChange(genGalaxy);
 gui.addColor(colorsM, 'insideColor').onFinishChange(genGalaxy);
 gui.addColor(colorsM, 'outsideColor').onFinishChange(genGalaxy);
+
+window.addEventListener('resize', () => {
+    sizes.width = window.innerWidth;
+    sizes.height = window.innerHeight;
+
+    camera.aspect = sizes.width / sizes.height;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+})
 
 const camera = new THREE.PerspectiveCamera(
     45, sizes.width / sizes.height, 0.1, 500
@@ -138,10 +171,18 @@ renderer.setSize(
     sizes.width, sizes.height
 );
 
+renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio, 2)
+);
+
+genGalaxy();
+
 const clock = new THREE.Clock();
 
 const tick = () => {
     const elaspedTime = clock.getElapsedTime();
+
+    material.uniforms.uTime.value = elaspedTime;
     
     controls.update();
 
