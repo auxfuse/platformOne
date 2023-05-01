@@ -2,15 +2,20 @@ import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import galaxyVertexShader from './shaders/galaxy/vertex.glsl';
 import galaxyFragmentShader from './shaders/galaxy/fragment.glsl';
 import GUI from 'lil-gui';
+
+const canvas = document.querySelector('canvas.webgl');
+const countdownContainer = document.querySelector('#countdown');
+const timerEl = document.getElementById('timer');
+const playButton = document.querySelector("#play");
 
 const gui = new GUI();
 gui.close();
 gui.title('Try Me!');
 
-const canvas = document.querySelector('canvas.webgl');
 
 const sizes = {
     width: window.innerWidth,
@@ -166,18 +171,38 @@ renderer.setPixelRatio(
 
 genGalaxy();
 
-const controls = new FlyControls(camera, renderer.domElement);
-controls.movementSpeed = 75;
-controls.rollSpeed = Math.PI / 24;
-controls.autoForward = false;
-controls.dragToLook = true;
+const flyControls = new FlyControls(camera, renderer.domElement);
+flyControls.movementSpeed = 15;
+flyControls.rollSpeed = Math.PI / 24;
+flyControls.autoForward = false;
+flyControls.dragToLook = true;
+
+const lookControls = new PointerLockControls(camera, renderer.domElement);
+lookControls.pointerSpeed = 0.075;
+
+playButton.addEventListener('click', () => {
+    lookControls.lock();
+});
+
+lookControls.addEventListener('lock', () => {
+    playButton.style.display = 'none';
+    countdownContainer.style.display = 'none';
+});
+
+lookControls.addEventListener('unlock', () => {
+    playButton.style.display = '';
+    countdownContainer.style.display = '';
+    playButton.style.display = '';
+});
 
 const clock = new THREE.Clock();
 
 const tick = () => {
     const elaspedTime = clock.getElapsedTime();
     
-    controls.update(0.007);
+    if (lookControls.isLocked === true) {
+        flyControls.update(0.0007);
+    }
 
     points.rotation.y += 0.0007;
 
@@ -187,8 +212,6 @@ const tick = () => {
 }
 
 tick();
-
-const timerEl = document.getElementById('timer');
 
 let timer = () => {
     let end = new Date("May 27, 2023 18:00:00 GMT");
