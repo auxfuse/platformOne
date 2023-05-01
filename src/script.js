@@ -167,7 +167,7 @@ renderer.setPixelRatio(
 genGalaxy();
 
 const controls = new FlyControls(camera, renderer.domElement);
-controls.movementSpeed = 50;
+controls.movementSpeed = 75;
 controls.rollSpeed = Math.PI / 24;
 controls.autoForward = false;
 controls.dragToLook = true;
@@ -177,9 +177,9 @@ const clock = new THREE.Clock();
 const tick = () => {
     const elaspedTime = clock.getElapsedTime();
     
-    controls.update(0.001);
+    controls.update(0.007);
 
-    points.rotation.y += 0.0005;
+    points.rotation.y += 0.0007;
 
     renderer.render(scene, camera);
 
