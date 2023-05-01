@@ -1,6 +1,7 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 import galaxyVertexShader from './shaders/galaxy/vertex.glsl';
 import galaxyFragmentShader from './shaders/galaxy/fragment.glsl';
 import GUI from 'lil-gui';
@@ -146,9 +147,9 @@ camera.position.x = 2;
 camera.position.y = 2;
 scene.add(camera);
 
-const controls = new OrbitControls(camera, canvas);
+// const controls = new OrbitControls(camera, canvas);
 // controls.autoRotate = true;
-controls.enableDamping = true;
+// controls.enableDamping = true;
 
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -165,12 +166,18 @@ renderer.setPixelRatio(
 
 genGalaxy();
 
+const controls = new FlyControls(camera, renderer.domElement);
+controls.movementSpeed = 100;
+controls.rollSpeed = Math.PI / 24;
+controls.autoForward = false;
+controls.dragToLook = true;
+
 const clock = new THREE.Clock();
 
 const tick = () => {
     const elaspedTime = clock.getElapsedTime();
     
-    controls.update();
+    controls.update(0.001);
 
     points.rotation.y += 0.0005;
 
