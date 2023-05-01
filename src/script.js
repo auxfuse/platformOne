@@ -167,7 +167,7 @@ renderer.setPixelRatio(
 genGalaxy();
 
 const controls = new FlyControls(camera, renderer.domElement);
-controls.movementSpeed = 100;
+controls.movementSpeed = 50;
 controls.rollSpeed = Math.PI / 24;
 controls.autoForward = false;
 controls.dragToLook = true;
