@@ -204,7 +204,7 @@ const tick = () => {
         flyControls.update(0.0007);
     }
 
-    points.rotation.y += 0.0007;
+    // points.rotation.y += 0.0007;
 
     renderer.render(scene, camera);
 
