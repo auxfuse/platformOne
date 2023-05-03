@@ -36,8 +36,8 @@ const params = {
 };
 
 const colorsM = {
-    insideColor: '#00bb00',
-    outsideColor: '#c1c360'
+    insideColor: '#2adfe9',
+    outsideColor: '#e704d4'
 }
 
 let geometry = null;
@@ -204,7 +204,7 @@ const tick = () => {
         flyControls.update(0.0007);
     }
 
-    // points.rotation.y += 0.0007;
+    points.rotation.y += 0.0007;
 
     renderer.render(scene, camera);
 
