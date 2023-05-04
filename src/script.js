@@ -1,5 +1,6 @@
 import './style.css';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
@@ -25,6 +26,22 @@ const sizes = {
 };
 
 const scene = new THREE.Scene();
+
+// Models
+let model = null;
+const gltfLoader = new GLTFLoader();
+gltfLoader.load( '/models/rocket/rocket.gltf',
+    (gltf) => {
+        model = gltf.scene.children[0];
+        model.scale.set(0.1, 0.125, 0.1);
+        model.position.set(1, 2, 0);
+        scene.add(model);
+    }
+);
+
+const light = new THREE.AmbientLight(0x78cbf5);
+light.intensity = 2.5;
+scene.add(light);
 
 // bg galaxy
 const params = {
@@ -118,6 +135,7 @@ const genGalaxy = () => {
 
     points = new THREE.Points(geometry, material);
     points.position.x = -4.5;
+    points.position.y = 1;
     points.position.z = -4.5;
     scene.add(points);
 };
@@ -149,8 +167,8 @@ const camera = new THREE.PerspectiveCamera(
     45, sizes.width / sizes.height, 0.1, 500
 );
 
-camera.position.z = 2;
-camera.position.x = 2;
+camera.position.z = 3;
+camera.position.x = 0;
 camera.position.y = 2;
 scene.add(camera);
 
@@ -207,6 +225,9 @@ const tick = () => {
     }
 
     points.rotation.y += 0.0007;
+    if (model) {
+        model.rotation.y -= 0.007;
+    }
 
     renderer.render(scene, camera);
 
