@@ -7,6 +7,9 @@ import galaxyVertexShader from './shaders/galaxy/vertex.glsl';
 import galaxyFragmentShader from './shaders/galaxy/fragment.glsl';
 import GUI from 'lil-gui';
 
+const style = "background-color: #150c21; color: #705df2; font-style: italic; border: 3px solid #78cbf5; font-size: 1.6em; padding: 0.5em;";
+console.log("%cAll ThreeJS elements inspired & learned from Bruno Simon's ThreeJS Journey Course🔗👉 https://threejs-journey.com/", style);
+
 const canvas = document.querySelector('canvas.webgl');
 const countdownContainer = document.querySelector('#countdown');
 const timerEl = document.getElementById('timer');
@@ -15,7 +18,6 @@ const playButton = document.querySelector("#play");
 const gui = new GUI();
 gui.close();
 gui.title('Try Me!');
-
 
 const sizes = {
     width: window.innerWidth,
