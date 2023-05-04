@@ -15,6 +15,7 @@ const canvas = document.querySelector('canvas.webgl');
 const countdownContainer = document.querySelector('#countdown');
 const timerEl = document.getElementById('timer');
 const playButton = document.querySelector("#play");
+const playGui = document.querySelector("#play-gui");
 
 const gui = new GUI();
 gui.close();
@@ -29,6 +30,8 @@ const scene = new THREE.Scene();
 
 // Models
 let model = null;
+let modelTv = null;
+
 const gltfLoader = new GLTFLoader();
 gltfLoader.load( '/models/rocket/rocket.gltf',
     (gltf) => {
@@ -39,9 +42,26 @@ gltfLoader.load( '/models/rocket/rocket.gltf',
     }
 );
 
-const light = new THREE.AmbientLight(0x78cbf5);
-light.intensity = 2.5;
-scene.add(light);
+gltfLoader.load( '/models/oldtv/oldTv.gltf',
+    (gltf) => {
+        modelTv = gltf.scene.children[0];
+        modelTv.scale.set(0.2, 0.2, 0.2);
+        modelTv.position.set(-4.5, 0.95, -4.5);
+        modelTv.rotateY(90);
+        scene.add(modelTv);
+    }
+);
+
+const light = new THREE.AmbientLight(0x78cbf5, 2.5);
+const spotLight = new THREE.SpotLight(0x78cbf5, 10, 5, Math.PI * 0.6, 0.25, 1);
+spotLight.position.set(-8, 1.5, -3);
+
+// const spotHelper = new THREE.SpotLightHelper( spotLight );
+scene.add(light, spotLight);
+
+spotLight.target.position.x = -5;
+spotLight.rotateY(45);
+scene.add(spotLight.target);
 
 // bg galaxy
 const params = {
@@ -207,12 +227,13 @@ playButton.addEventListener('click', () => {
 lookControls.addEventListener('lock', () => {
     playButton.style.display = 'none';
     countdownContainer.style.display = 'none';
+    playGui.style.opacity = 1;
 });
 
 lookControls.addEventListener('unlock', () => {
     playButton.style.display = '';
     countdownContainer.style.display = '';
-    playButton.style.display = '';
+    playGui.style.opacity = 0;
 });
 
 const clock = new THREE.Clock();
@@ -221,12 +242,17 @@ const tick = () => {
     const elaspedTime = clock.getElapsedTime();
     
     if (lookControls.isLocked === true) {
-        flyControls.update(0.0007);
+        flyControls.update(0.001);
     }
 
     points.rotation.y += 0.0007;
+
     if (model) {
         model.rotation.y -= 0.007;
+    }
+
+    if (modelTv) {
+        modelTv.rotation.y -= 0.002;
     }
 
     renderer.render(scene, camera);
