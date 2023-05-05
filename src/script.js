@@ -1,5 +1,7 @@
 import './style.css';
 import * as THREE from 'three';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
@@ -32,8 +34,7 @@ const scene = new THREE.Scene();
 let model = null;
 let modelTv = null;
 let modelStar = null;
-let modelDuck = null;
-let modelSuzanne = null;
+let text = null;
 
 const gltfLoader = new GLTFLoader();
 
@@ -63,6 +64,36 @@ gltfLoader.load('/models/extras/star.gltf',
         modelStar.scale.set(0.03, 0.03, 0.03);
         modelStar.position.set(-4.5, 1.0, -4.5);
         scene.add(modelStar);
+    }
+);
+
+// text
+
+const fontLoader = new FontLoader();
+const textContent = '> console...';
+
+fontLoader.load(
+    '/fonts/helvetiker_regular.typeface.json',
+    (font) => {
+        console.log('font load');
+        const textGeometry = new TextGeometry(
+            textContent, {
+                font: font,
+                size: 0.025,
+                height: 0.025,
+                width: 0.1,
+                curveSegments: 8
+            }
+        );
+        textGeometry.center();
+        const textMaterial = new THREE.MeshBasicMaterial({
+            color: 0x705df2,
+        });
+        const text = new THREE.Mesh(textGeometry, textMaterial);
+        text.scale.set(0.5, 0.5, 0.25);
+        text.position.set(2, 1, 2);
+        text.rotateX(-45);
+        scene.add(text);
     }
 );
 
@@ -257,21 +288,25 @@ const tick = () => {
     
     if (lookControls.isLocked === true) {
         flyControls.update(0.001);
-    }
+    };
 
     points.rotation.y += 0.0007;
 
     if (model) {
         model.rotation.y -= 0.007;
-    }
+    };
 
     if (modelTv) {
         modelTv.rotation.y -= 0.002;
-    }
+    };
+
+    if (text) {
+        text.rotation.x -= 0.01;
+    };
 
     if (modelStar) {
         modelStar.rotation.z -= 0.0025;
-    }
+    };
 
     renderer.render(scene, camera);
 
