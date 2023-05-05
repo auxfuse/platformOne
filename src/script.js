@@ -31,8 +31,12 @@ const scene = new THREE.Scene();
 // Models
 let model = null;
 let modelTv = null;
+let modelStar = null;
+let modelDuck = null;
+let modelSuzanne = null;
 
 const gltfLoader = new GLTFLoader();
+
 gltfLoader.load( '/models/rocket/rocket.gltf',
     (gltf) => {
         model = gltf.scene.children[0];
@@ -49,6 +53,16 @@ gltfLoader.load( '/models/oldtv/oldTv.gltf',
         modelTv.position.set(-4.5, 0.95, -4.5);
         modelTv.rotateY(90);
         scene.add(modelTv);
+    }
+);
+
+// extra models
+gltfLoader.load('/models/extras/star.gltf',
+    (gltf) => {
+        modelStar = gltf.scene.children[0];
+        modelStar.scale.set(0.03, 0.03, 0.03);
+        modelStar.position.set(-4.5, 1.0, -4.5);
+        scene.add(modelStar);
     }
 );
 
@@ -253,6 +267,10 @@ const tick = () => {
 
     if (modelTv) {
         modelTv.rotation.y -= 0.002;
+    }
+
+    if (modelStar) {
+        modelStar.rotation.z -= 0.0025;
     }
 
     renderer.render(scene, camera);
