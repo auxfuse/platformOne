@@ -89,7 +89,7 @@ fontLoader.load(
         const textMaterial = new THREE.MeshBasicMaterial({
             color: 0x705df2,
         });
-        const text = new THREE.Mesh(textGeometry, textMaterial);
+        text = new THREE.Mesh(textGeometry, textMaterial);
         text.scale.set(0.5, 0.5, 0.25);
         text.position.set(2, 1, 2);
         text.rotateX(-45);
