@@ -11,7 +11,29 @@ import galaxyFragmentShader from './shaders/galaxy/fragment.glsl';
 import GUI from 'lil-gui';
 
 const style = "background-color: #150c21; color: #705df2; font-style: italic; border: 3px solid #78cbf5; font-size: 1.6em; padding: 0.5em;";
+const terminalStyle = "background-color: #262b27; color: #74ad72; border: 2px solid #0b0d0b; font-size: 1.2em; padding: 0.2em;";
 console.log("%cAll ThreeJS elements inspired & learned from Bruno Simon's ThreeJS Journey Course🔗👉 https://threejs-journey.com/", style);
+
+const transcript = `
+    >> HackCorp DevGames Division
+    >> Transmission Relay
+    >> Partial Decryption
+    -----------------------------
+    Pilot:          Only we've been drifting a while now...
+    Co-Pilot:       No...have we? It's **** ** **** game now.
+    Pilot:          Ever notice anything during *** **** **?
+            -- break -- static -- break --
+    Pilot:          Look *** **** got a feeling about this mission.
+    Co-Pilot:       Even still, in 0.02 Parsecs we will know.
+    Pilot:          Vouching for them even *** **** ** *****.
+    Co-Pilot:       Everything rides on **** **** well.
+    Pilot:          Lab-techs will know...wait...what was ***
+            -- break -- static -- break --
+            -- Lost source transmission --
+    -----------------------------
+    >> End Decryption
+`;
+console.log(`%c${transcript}`, terminalStyle);
 
 const canvas = document.querySelector('canvas.webgl');
 const countdownContainer = document.querySelector('#countdown');
@@ -237,10 +259,6 @@ camera.position.x = 0;
 camera.position.y = 2;
 scene.add(camera);
 
-// const controls = new OrbitControls(camera, canvas);
-// controls.autoRotate = true;
-// controls.enableDamping = true;
-
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     alpha: true
@@ -285,10 +303,8 @@ const clock = new THREE.Clock();
 
 const tick = () => {
     const elaspedTime = clock.getElapsedTime();
-    
-    if (lookControls.isLocked === true) {
-        flyControls.update(0.001);
-    };
+
+    flyControls.update(0.001);
 
     points.rotation.y += 0.0007;
 

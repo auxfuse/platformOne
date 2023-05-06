@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nabla&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&family=Nabla&family=Press+Start+2P&display=swap');
 
 :root {
     --bg: rgb(22, 21, 21);
@@ -6,6 +6,7 @@
 
     --font: 'Nabla', sans-serif;
     --font-backup: 'Press Start 2P', sans-serif;
+    --font-console: 'Electrolize', sans-serif;
 }
 
 * {
@@ -32,8 +33,6 @@ body {
 
 #countdown {
     min-height: 100vh;
-    /* width: 100%;
-    overflow: hidden; */
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -53,6 +52,23 @@ body {
     pointer-events: none;
 }
 
+#countdown::before, #countdown::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 50%;
+    border: 1px dotted var(--neon);
+    border-radius: 25px;
+}
+
+#countdown::before {
+    margin: 0 auto 5rem;
+}
+
+#countdown::after {
+    margin: 5rem auto 0;
+}
+
 #play {
     background: none;
     border: 1px solid var(--neon);
@@ -62,7 +78,7 @@ body {
     padding: 1rem;
     margin: 1rem auto;
     cursor: pointer;
-    position: absolute;
+    position: fixed;
     top: 1rem;
     left: 1rem;
 }
@@ -120,7 +136,6 @@ body {
     min-height: 100vh;
     width: 100%;
     pointer-events: none;
-    /* z-index: 1; */
 }
 
 .txt {
