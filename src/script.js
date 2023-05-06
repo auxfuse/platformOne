@@ -227,7 +227,7 @@ const genGalaxy = () => {
     scene.add(points);
 };
 
-const axesHelper = new THREE.AxesHelper( 5 );
+const axesHelper = new THREE.AxesHelper( 0.5 );
 scene.add( axesHelper );
 
 gui.add(params, 'count').min(100).max(25000).step(100).onFinishChange(genGalaxy);
