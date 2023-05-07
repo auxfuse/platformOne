@@ -123,10 +123,13 @@ body {
 }
 
 .keybind {
+    display: inline-block;
+    min-width: 2.5rem;
     border: 1px solid var(--neon);
     border-radius: 5px;
     padding: 3px 10px;
     background-color: rgba(42, 240, 92, 0.2);
+    text-align: center;
 }
 
 .webgl {
