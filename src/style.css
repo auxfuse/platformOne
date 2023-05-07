@@ -262,6 +262,10 @@ body {
         line-height: 2rem;
     }
 
+    #play {
+        font-family: var(--font-console);
+    }
+
     .txt {
         font-size: 1.6rem;
     }
