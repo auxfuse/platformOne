@@ -10,6 +10,8 @@ import galaxyVertexShader from './shaders/galaxy/vertex.glsl';
 import galaxyFragmentShader from './shaders/galaxy/fragment.glsl';
 import GUI from 'lil-gui';
 
+const isMobile = /Android|iPhone/i.test(navigator.userAgent);
+
 const style = "background-color: #150c21; color: #705df2; font-style: italic; border: 3px solid #78cbf5; font-size: 1.6em; padding: 0.5em;";
 const terminalStyle = "background-color: #262b27; color: #74ad72; border: 2px solid #0b0d0b; font-size: 1.2em; padding: 0.2em;";
 console.log("%cAll ThreeJS elements inspired & learned from Bruno Simon's ThreeJS Journey Course🔗👉 https://threejs-journey.com/", style);
@@ -284,7 +286,11 @@ const lookControls = new PointerLockControls(camera, renderer.domElement);
 lookControls.pointerSpeed = 0.075;
 
 playButton.addEventListener('click', () => {
-    lookControls.lock();
+    if (isMobile) {
+        window.alert("💫 Not available on Mobile - Experience this on a laptop / PC browser 🚀\nLook for Easter Eggs 🐰🥚 on your browser too!");
+    } else {
+        lookControls.lock();
+    }
 });
 
 lookControls.addEventListener('lock', () => {
