@@ -1,5 +1,6 @@
 import './style.css';
 import * as THREE from 'three';
+import gsap from 'gsap';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -285,9 +286,24 @@ flyControls.dragToLook = true;
 const lookControls = new PointerLockControls(camera, renderer.domElement);
 lookControls.pointerSpeed = 0.075;
 
+let timeline = gsap.timeline();
+
 playButton.addEventListener('click', () => {
     if (isMobile) {
-        window.alert("💫 Not available on Mobile - Experience this on a laptop / PC browser 🚀\nLook for Easter Eggs 🐰🥚 on your browser too!");
+        // window.alert("💫 Not available on Mobile - Experience this on a laptop / PC browser 🚀\nLook for Easter Eggs 🐰🥚 on your browser too!");
+        countdownContainer.style.display = 'none';
+        timeline.to(camera.position, {x: 1, y: 2.5, duration: 1, ease: "power2"});
+        timeline.to(camera.position, {x: -4.5, y: 1, z: -4, duration: 1, delay: 4});
+        timeline.to(camera.position, {x: 2, y: 1, z: 3, duration: 1, ease: "power1.inOut", delay: 5});
+        // gsap.to(
+        //     camera.position, {
+        //         x: -4.5,
+        //         y: 1,
+        //         z: -4,
+        //         duration: 1.5,
+        //         ease: "back.inOut(1.7)"
+        //     }
+        // );
     } else {
         lookControls.lock();
     }
