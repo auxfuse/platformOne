@@ -84,6 +84,7 @@ body {
 }
 
 #play-gui {
+    font-family: var(--font-console);
     height: 100vh;
     position: absolute;
     display: flex;
