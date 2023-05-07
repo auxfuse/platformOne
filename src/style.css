@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nabla&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&family=Nabla&family=Press+Start+2P&display=swap');
 
 :root {
     --bg: rgb(22, 21, 21);
@@ -6,6 +6,7 @@
 
     --font: 'Nabla', sans-serif;
     --font-backup: 'Press Start 2P', sans-serif;
+    --font-console: 'Electrolize', sans-serif;
 }
 
 * {
@@ -19,6 +20,7 @@ body {
     font-family: var(--font);
     background: var(--bg);
     color: var(--neon);
+    position: relative;
 }
 
 .mt-1 {
@@ -31,8 +33,6 @@ body {
 
 #countdown {
     min-height: 100vh;
-    width: 100%;
-    overflow: hidden;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -49,21 +49,93 @@ body {
     font-size: 1.8rem;
     text-align: center;
     user-select: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
     pointer-events: none;
 }
 
-.webgl {
+#countdown::before, #countdown::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 50%;
+    border: 1px dotted var(--neon);
+    border-radius: 25px;
+}
+
+#countdown::before {
+    margin: 0 auto 5rem;
+}
+
+#countdown::after {
+    margin: 5rem auto 0;
+}
+
+#play {
+    background: none;
+    border: 1px solid var(--neon);
+    border-radius: 0.5rem;
+    font-family: var(--font);
+    font-size: 1.4rem;
+    padding: 1rem;
+    margin: 1rem auto;
+    cursor: pointer;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+}
+
+#play-gui {
+    height: 100vh;
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem;
+    pointer-events: none;
+    opacity: 0;
+}
+
+#play-gui p {
+    font-size: 1.4rem;
+}
+
+#play-gui p::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 100%;
+    margin: 0 auto;
+    background-color: var(--neon);
+}
+
+#play-gui ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+#play-gui ul li {
+    font-size: 1.2rem;
+    list-style: none;
+    padding-left: 1rem;
+}
+
+.keybind {
+    border: 1px solid var(--neon);
+    border-radius: 5px;
+    padding: 3px 10px;
+    background-color: rgba(42, 240, 92, 0.2);
+}
+
+.webgl {
+    position: fixed;
     top: 0;
     left: 0;
     outline: none;
     min-height: 100vh;
     width: 100%;
-    z-index: 1;
+    pointer-events: none;
 }
 
 .txt {

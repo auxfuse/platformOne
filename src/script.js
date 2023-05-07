@@ -1,15 +1,51 @@
 import './style.css';
 import * as THREE from 'three';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import galaxyVertexShader from './shaders/galaxy/vertex.glsl';
 import galaxyFragmentShader from './shaders/galaxy/fragment.glsl';
 import GUI from 'lil-gui';
 
+const isMobile = /Android|iPhone/i.test(navigator.userAgent);
+
+const style = "background-color: #150c21; color: #705df2; font-style: italic; border: 3px solid #78cbf5; font-size: 1.6em; padding: 0.5em;";
+const terminalStyle = "background-color: #262b27; color: #74ad72; border: 2px solid #0b0d0b; font-size: 1.2em; padding: 0.2em;";
+console.log("%cAll ThreeJS elements inspired & learned from Bruno Simon's ThreeJS Journey Course🔗👉 https://threejs-journey.com/", style);
+
+const transcript = `
+    >> HackCorp DevGames Division
+    >> Transmission Relay
+    >> Partial Decryption
+    -----------------------------
+    Pilot:          Only we've been drifting a while now...
+    Co-Pilot:       No...have we? It's **** ** **** game now.
+    Pilot:          Ever notice anything during *** **** **?
+            -- break -- static -- break --
+    Pilot:          Look *** **** got a feeling about this mission.
+    Co-Pilot:       Even still, in 0.02 Parsecs we will know.
+    Pilot:          Vouching for them even *** **** ** *****.
+    Co-Pilot:       Everything rides on **** **** well.
+    Pilot:          Lab-techs will know...wait...what was ***
+            -- break -- static -- break --
+            -- Lost source transmission --
+    -----------------------------
+    >> End Decryption
+`;
+console.log(`%c${transcript}`, terminalStyle);
+
+const canvas = document.querySelector('canvas.webgl');
+const countdownContainer = document.querySelector('#countdown');
+const timerEl = document.getElementById('timer');
+const playButton = document.querySelector("#play");
+const playGui = document.querySelector("#play-gui");
+
 const gui = new GUI();
 gui.close();
 gui.title('Try Me!');
-
-const canvas = document.querySelector('canvas.webgl');
 
 const sizes = {
     width: window.innerWidth,
@@ -17,6 +53,84 @@ const sizes = {
 };
 
 const scene = new THREE.Scene();
+
+// Models
+let model = null;
+let modelTv = null;
+let modelStar = null;
+let text = null;
+
+const gltfLoader = new GLTFLoader();
+
+gltfLoader.load( '/models/rocket/rocket.gltf',
+    (gltf) => {
+        model = gltf.scene.children[0];
+        model.scale.set(0.1, 0.125, 0.1);
+        model.position.set(1, 2, 0);
+        scene.add(model);
+    }
+);
+
+gltfLoader.load( '/models/oldtv/oldTv.gltf',
+    (gltf) => {
+        modelTv = gltf.scene.children[0];
+        modelTv.scale.set(0.2, 0.2, 0.2);
+        modelTv.position.set(-4.5, 0.95, -4.5);
+        modelTv.rotateY(90);
+        scene.add(modelTv);
+    }
+);
+
+// extra models
+gltfLoader.load('/models/extras/star.gltf',
+    (gltf) => {
+        modelStar = gltf.scene.children[0];
+        modelStar.scale.set(0.03, 0.03, 0.03);
+        modelStar.position.set(-4.5, 1.0, -4.5);
+        scene.add(modelStar);
+    }
+);
+
+// text
+
+const fontLoader = new FontLoader();
+const textContent = '> console...';
+
+fontLoader.load(
+    '/fonts/helvetiker_regular.typeface.json',
+    (font) => {
+        console.log('font load');
+        const textGeometry = new TextGeometry(
+            textContent, {
+                font: font,
+                size: 0.025,
+                height: 0.025,
+                width: 0.1,
+                curveSegments: 8
+            }
+        );
+        textGeometry.center();
+        const textMaterial = new THREE.MeshBasicMaterial({
+            color: 0x705df2,
+        });
+        text = new THREE.Mesh(textGeometry, textMaterial);
+        text.scale.set(0.5, 0.5, 0.25);
+        text.position.set(2, 1, 2);
+        text.rotateX(-45);
+        scene.add(text);
+    }
+);
+
+const light = new THREE.AmbientLight(0x78cbf5, 2.5);
+const spotLight = new THREE.SpotLight(0x78cbf5, 10, 5, Math.PI * 0.6, 0.25, 1);
+spotLight.position.set(-8, 1.5, -3);
+
+// const spotHelper = new THREE.SpotLightHelper( spotLight );
+scene.add(light, spotLight);
+
+spotLight.target.position.x = -5;
+spotLight.rotateY(45);
+scene.add(spotLight.target);
 
 // bg galaxy
 const params = {
@@ -30,8 +144,8 @@ const params = {
 };
 
 const colorsM = {
-    insideColor: '#00bb00',
-    outsideColor: '#c1c360'
+    insideColor: '#2adfe9',
+    outsideColor: '#e704d4'
 }
 
 let geometry = null;
@@ -110,11 +224,12 @@ const genGalaxy = () => {
 
     points = new THREE.Points(geometry, material);
     points.position.x = -4.5;
+    points.position.y = 1;
     points.position.z = -4.5;
     scene.add(points);
 };
 
-const axesHelper = new THREE.AxesHelper( 5 );
+const axesHelper = new THREE.AxesHelper( 0.5 );
 scene.add( axesHelper );
 
 gui.add(params, 'count').min(100).max(25000).step(100).onFinishChange(genGalaxy);
@@ -141,14 +256,10 @@ const camera = new THREE.PerspectiveCamera(
     45, sizes.width / sizes.height, 0.1, 500
 );
 
-camera.position.z = 2;
-camera.position.x = 2;
+camera.position.z = 3;
+camera.position.x = 0;
 camera.position.y = 2;
 scene.add(camera);
-
-const controls = new OrbitControls(camera, canvas);
-// controls.autoRotate = true;
-controls.enableDamping = true;
 
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -165,14 +276,59 @@ renderer.setPixelRatio(
 
 genGalaxy();
 
+const flyControls = new FlyControls(camera, renderer.domElement);
+flyControls.movementSpeed = 15;
+flyControls.rollSpeed = Math.PI / 24;
+flyControls.autoForward = false;
+flyControls.dragToLook = true;
+
+const lookControls = new PointerLockControls(camera, renderer.domElement);
+lookControls.pointerSpeed = 0.075;
+
+playButton.addEventListener('click', () => {
+    if (isMobile) {
+        window.alert("💫 Not available on Mobile - Experience this on a laptop / PC browser 🚀\nLook for Easter Eggs 🐰🥚 on your browser too!");
+    } else {
+        lookControls.lock();
+    }
+});
+
+lookControls.addEventListener('lock', () => {
+    playButton.style.display = 'none';
+    countdownContainer.style.display = 'none';
+    playGui.style.opacity = 1;
+});
+
+lookControls.addEventListener('unlock', () => {
+    playButton.style.display = '';
+    countdownContainer.style.display = '';
+    playGui.style.opacity = 0;
+});
+
 const clock = new THREE.Clock();
 
 const tick = () => {
     const elaspedTime = clock.getElapsedTime();
-    
-    controls.update();
 
-    points.rotation.y += 0.0005;
+    flyControls.update(0.001);
+
+    points.rotation.y += 0.0007;
+
+    if (model) {
+        model.rotation.y -= 0.007;
+    };
+
+    if (modelTv) {
+        modelTv.rotation.y -= 0.002;
+    };
+
+    if (text) {
+        text.rotation.x -= 0.01;
+    };
+
+    if (modelStar) {
+        modelStar.rotation.z -= 0.0025;
+    };
 
     renderer.render(scene, camera);
 
@@ -180,8 +336,6 @@ const tick = () => {
 }
 
 tick();
-
-const timerEl = document.getElementById('timer');
 
 let timer = () => {
     let end = new Date("May 27, 2023 18:00:00 GMT");
