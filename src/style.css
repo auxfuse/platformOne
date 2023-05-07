@@ -21,6 +21,8 @@ body {
     background: var(--bg);
     color: var(--neon);
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .mt-1 {
@@ -29,6 +31,17 @@ body {
 
 .mt-2 {
     margin-top: 2rem;
+}
+
+#mobile-alert {
+    width: 70%;
+    border: 1px dashed var(--neon);
+    border-radius: 1rem;
+    font-size: 1.6rem;
+    margin: 0 auto;
+    padding: 1rem;
+    text-align: center;
+    background-color: rgba(42, 240, 92, 0.2);
 }
 
 #countdown {
