@@ -96,9 +96,13 @@ gltfLoader.load('/models/extras/star.gltf',
 gltfLoader.load('/models/threejs/scene.gltf',
     (gltf) => {
         threeLogo = gltf.scene.children[0];
-        threeLogo.scale.set(0.01, 0.01, 0.01);
+        threeLogo.scale.set(0.0075, 0.0075, 0.0075);
         threeLogo.position.set(-4.5, 1.0, 4.5);
         scene.add(threeLogo);
+
+        gsap.to(threeLogo.position, {
+            x: -3, y: 3, z: -10, duration: 3, ease: "power4", delay: 3
+        })
     }
 );
 
@@ -298,15 +302,15 @@ lookControls.pointerSpeed = 0.075;
 
 let timeline = gsap.timeline();
 let pos1 = {x: 1, y: 2.5, duration: 1, ease: "power2"};
-let pos2 = {};
-let pos3 = {};
+let pos2 = {x: -4.5, y: 1, z: -4, duration: 1, delay: 4};
+let pos3 = {x: 2, y: 1, z: 3, duration: 1, ease: "power1.inOut", delay: 5};
 
 playButton.addEventListener('click', () => {
     if (isMobile) {
         countdownContainer.style.display = 'none';
         timeline.to(camera.position, pos1);
-        timeline.to(camera.position, {x: -4.5, y: 1, z: -4, duration: 1, delay: 4});
-        timeline.to(camera.position, {x: 2, y: 1, z: 3, duration: 1, ease: "power1.inOut", delay: 5});
+        timeline.to(camera.position, pos2);
+        timeline.to(camera.position, pos3);
     } else {
         lookControls.lock();
     }
@@ -348,6 +352,11 @@ const tick = () => {
     if (modelStar) {
         modelStar.rotation.z -= 0.0025;
     };
+
+    if (threeLogo) {
+        threeLogo.rotation.z += 0.005;
+        threeLogo.rotation.y += 0.007;
+    }
 
     renderer.render(scene, camera);
 
