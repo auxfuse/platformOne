@@ -25,6 +25,7 @@ https://www.cgtrader.com/items/3805632/download-page
 
 https://www.cgtrader.com/free-3d-models/electronics/other/old-tv-6e25e11f-a953-4be8-84dc-91816e13e8dc
 
+https://sketchfab.com/3d-models/threejs-60320862bf904b7ab0e032c27daf7c7c
 
 
 

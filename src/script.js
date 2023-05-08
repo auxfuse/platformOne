@@ -59,6 +59,7 @@ const scene = new THREE.Scene();
 let model = null;
 let modelTv = null;
 let modelStar = null;
+let threeLogo = null;
 let text = null;
 
 const gltfLoader = new GLTFLoader();
@@ -89,6 +90,15 @@ gltfLoader.load('/models/extras/star.gltf',
         modelStar.scale.set(0.03, 0.03, 0.03);
         modelStar.position.set(-4.5, 1.0, -4.5);
         scene.add(modelStar);
+    }
+);
+
+gltfLoader.load('/models/threejs/scene.gltf',
+    (gltf) => {
+        threeLogo = gltf.scene.children[0];
+        threeLogo.scale.set(0.01, 0.01, 0.01);
+        threeLogo.position.set(-4.5, 1.0, 4.5);
+        scene.add(threeLogo);
     }
 );
 
@@ -287,23 +297,16 @@ const lookControls = new PointerLockControls(camera, renderer.domElement);
 lookControls.pointerSpeed = 0.075;
 
 let timeline = gsap.timeline();
+let pos1 = {x: 1, y: 2.5, duration: 1, ease: "power2"};
+let pos2 = {};
+let pos3 = {};
 
 playButton.addEventListener('click', () => {
     if (isMobile) {
-        // window.alert("💫 Not available on Mobile - Experience this on a laptop / PC browser 🚀\nLook for Easter Eggs 🐰🥚 on your browser too!");
         countdownContainer.style.display = 'none';
-        timeline.to(camera.position, {x: 1, y: 2.5, duration: 1, ease: "power2"});
+        timeline.to(camera.position, pos1);
         timeline.to(camera.position, {x: -4.5, y: 1, z: -4, duration: 1, delay: 4});
         timeline.to(camera.position, {x: 2, y: 1, z: 3, duration: 1, ease: "power1.inOut", delay: 5});
-        // gsap.to(
-        //     camera.position, {
-        //         x: -4.5,
-        //         y: 1,
-        //         z: -4,
-        //         duration: 1.5,
-        //         ease: "back.inOut(1.7)"
-        //     }
-        // );
     } else {
         lookControls.lock();
     }
