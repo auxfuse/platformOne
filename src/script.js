@@ -70,6 +70,23 @@ gltfLoader.load( '/models/rocket/rocket.gltf',
         model.scale.set(0.1, 0.125, 0.1);
         model.position.set(1, 2, 0);
         scene.add(model);
+
+        let rocketTl = gsap.timeline({
+            repeat: -1,
+            yoyo: true
+        });
+
+        rocketTl.to(model.position, {
+            y: 4,
+            duration: 3,
+            ease: "power1",
+            delay: 4
+        }).to(model.position, {
+            y: 2,
+            duration: 3,
+            ease: "power1",
+            delay: 4
+        });
     }
 );
 
