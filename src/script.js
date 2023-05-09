@@ -1,6 +1,7 @@
 import './style.css';
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { SlowMo } from 'gsap/all';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -117,9 +118,16 @@ gltfLoader.load('/models/threejs/scene.gltf',
         threeLogo.position.set(-4.5, 1.0, 4.5);
         scene.add(threeLogo);
 
-        gsap.to(threeLogo.position, {
+        let logoTl = gsap.timeline({
+            repeat: -1,
+            yoyo: true
+        });
+
+        logoTl.to(threeLogo.position, {
             x: -3, y: 3, z: -10, duration: 3, ease: "power4", delay: 3
-        })
+        }).to(threeLogo.position, {
+            x: -4.5, y: 1.0, z: 4.5, duration: 4, ease: SlowMo.ease.config(0.7, 0.7), delay: 2
+        });
     }
 );
 
