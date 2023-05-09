@@ -1,5 +1,13 @@
 import './style.css';
 import * as THREE from 'three';
+import gsap from 'gsap';
+import { SlowMo } from 'gsap/all';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPixelatedPass } from 'three/examples/jsm/postprocessing/RenderPixelatedPass.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { SobelOperatorShader } from 'three/examples/jsm/shaders/SobelOperatorShader.js';
+import { AnaglyphEffect } from 'three/examples/jsm/effects/AnaglyphEffect.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -45,7 +53,7 @@ const playGui = document.querySelector("#play-gui");
 
 const gui = new GUI();
 gui.close();
-gui.title('Try Me!');
+gui.title('🚀 Try Me! ☄️');
 
 const sizes = {
     width: window.innerWidth,
@@ -58,6 +66,7 @@ const scene = new THREE.Scene();
 let model = null;
 let modelTv = null;
 let modelStar = null;
+let threeLogo = null;
 let text = null;
 
 const gltfLoader = new GLTFLoader();
@@ -68,6 +77,23 @@ gltfLoader.load( '/models/rocket/rocket.gltf',
         model.scale.set(0.1, 0.125, 0.1);
         model.position.set(1, 2, 0);
         scene.add(model);
+
+        let rocketTl = gsap.timeline({
+            repeat: -1,
+            yoyo: true
+        });
+
+        rocketTl.to(model.position, {
+            y: 4,
+            duration: 3,
+            ease: "power1",
+            delay: 4
+        }).to(model.position, {
+            y: 2,
+            duration: 3,
+            ease: "power1",
+            delay: 4
+        });
     }
 );
 
@@ -88,6 +114,26 @@ gltfLoader.load('/models/extras/star.gltf',
         modelStar.scale.set(0.03, 0.03, 0.03);
         modelStar.position.set(-4.5, 1.0, -4.5);
         scene.add(modelStar);
+    }
+);
+
+gltfLoader.load('/models/threejs/scene.gltf',
+    (gltf) => {
+        threeLogo = gltf.scene.children[0];
+        threeLogo.scale.set(0.0075, 0.0075, 0.0075);
+        threeLogo.position.set(-4.5, 1.0, 4.5);
+        scene.add(threeLogo);
+
+        let logoTl = gsap.timeline({
+            repeat: -1,
+            yoyo: true
+        });
+
+        logoTl.to(threeLogo.position, {
+            x: -3, y: 3, z: -10, duration: 3, ease: "power4", delay: 3
+        }).to(threeLogo.position, {
+            x: -4.5, y: 1.0, z: 4.5, duration: 4, ease: SlowMo.ease.config(0.7, 0.7), delay: 2
+        });
     }
 );
 
@@ -148,9 +194,16 @@ const colorsM = {
     outsideColor: '#e704d4'
 }
 
+const extraGui = {
+    RGBShift: false,
+    Pixelate: false,
+    Sobel: false
+}
+
 let geometry = null;
 let material = null;
 let points = null;
+let effect = null;
 
 const genGalaxy = () => {
 
@@ -232,14 +285,33 @@ const genGalaxy = () => {
 const axesHelper = new THREE.AxesHelper( 0.5 );
 scene.add( axesHelper );
 
-gui.add(params, 'count').min(100).max(25000).step(100).onFinishChange(genGalaxy);
-gui.add(params, 'radius').min(0.01).max(20).step(0.01).onFinishChange(genGalaxy);
-gui.add(params, 'branches').min(2).max(20).step(1).onFinishChange(genGalaxy);
-gui.add(params, 'spin').min(-5).max(5).step(0.001).onFinishChange(genGalaxy);
-gui.add(params, 'randomness').min(0.01).max(2).step(0.01).onFinishChange(genGalaxy);
-gui.add(params, 'randomnessPower').min(1).max(10).step(0.1).onFinishChange(genGalaxy);
-gui.addColor(colorsM, 'insideColor').onFinishChange(genGalaxy);
-gui.addColor(colorsM, 'outsideColor').onFinishChange(genGalaxy);
+const galaxyFolder = gui.addFolder( 'Galaxy 🌌' );
+const galaxyPropsFolder = galaxyFolder.addFolder( '>> Galaxy Properties 🔧' );
+galaxyPropsFolder.close();
+galaxyPropsFolder.add(params, 'radius').min(0.01).max(20).step(0.01).onFinishChange(genGalaxy);
+galaxyPropsFolder.add(params, 'branches').min(2).max(20).step(1).onFinishChange(genGalaxy);
+galaxyPropsFolder.add(params, 'spin').min(-5).max(5).step(0.001).onFinishChange(genGalaxy);
+
+const galaxyStarFolder = galaxyFolder.addFolder( '>> Star Properties ⭐' );
+galaxyStarFolder.close();
+galaxyStarFolder.add(params, 'count').min(100).max(25000).step(100).onFinishChange(genGalaxy);
+galaxyStarFolder.add(params, 'randomness').min(0.01).max(2).step(0.01).onFinishChange(genGalaxy);
+galaxyStarFolder.add(params, 'randomnessPower').min(1).max(10).step(0.1).onFinishChange(genGalaxy);
+
+const galaxyColorFolder = galaxyFolder.addFolder( '>> Galaxy Colors 🌈' );
+galaxyColorFolder.close();
+galaxyColorFolder.addColor(colorsM, 'insideColor').onFinishChange(genGalaxy);
+galaxyColorFolder.addColor(colorsM, 'outsideColor').onFinishChange(genGalaxy);
+
+const renderEffectFolder = gui.addFolder( 'Camera Effects 🪄' );
+renderEffectFolder.close();
+renderEffectFolder.add(extraGui, 'RGBShift');
+renderEffectFolder.add(extraGui, 'Pixelate');
+renderEffectFolder.add(extraGui, 'Sobel');
+
+let composer = null;
+let sobelComposer = null;
+let effectSobel = null;
 
 window.addEventListener('resize', () => {
     sizes.width = window.innerWidth;
@@ -250,7 +322,11 @@ window.addEventListener('resize', () => {
 
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-})
+    composer.setSize(sizes.width, sizes.height);
+
+    effectSobel.uniforms[ 'resolution' ].value.x = sizes.width * window.devicePixelRatio;
+    effectSobel.uniforms[ 'resolution' ].value.y = sizes.height * window.devicePixelRatio;
+});
 
 const camera = new THREE.PerspectiveCamera(
     45, sizes.width / sizes.height, 0.1, 500
@@ -274,6 +350,22 @@ renderer.setPixelRatio(
     Math.min(window.devicePixelRatio, 2)
 );
 
+composer = new EffectComposer( renderer );
+const renderPixelatedPass = new RenderPixelatedPass( 3, scene, camera );
+composer.addPass( renderPixelatedPass );
+
+sobelComposer = new EffectComposer( renderer );
+const renderPass = new RenderPass(scene, camera);
+sobelComposer.addPass( renderPass );
+
+effect = new AnaglyphEffect( renderer );
+effect.setSize( sizes.width, sizes.height );
+
+effectSobel = new ShaderPass( SobelOperatorShader );
+effectSobel.uniforms[ 'resolution' ].value.x = sizes.width * window.devicePixelRatio;
+effectSobel.uniforms[ 'resolution' ].value.y = sizes.height * window.devicePixelRatio;
+sobelComposer.addPass( effectSobel );
+
 genGalaxy();
 
 const flyControls = new FlyControls(camera, renderer.domElement);
@@ -285,9 +377,17 @@ flyControls.dragToLook = true;
 const lookControls = new PointerLockControls(camera, renderer.domElement);
 lookControls.pointerSpeed = 0.075;
 
+let timeline = gsap.timeline();
+let pos1 = {x: 1, y: 2.5, duration: 1, ease: "power2"};
+let pos2 = {x: -4.5, y: 1, z: -4, duration: 1, delay: 4};
+let pos3 = {x: 2, y: 1, z: 3, duration: 1, ease: "power1.inOut", delay: 5};
+
 playButton.addEventListener('click', () => {
     if (isMobile) {
-        window.alert("💫 Not available on Mobile - Experience this on a laptop / PC browser 🚀\nLook for Easter Eggs 🐰🥚 on your browser too!");
+        countdownContainer.style.display = 'none';
+        timeline.to(camera.position, pos1);
+        timeline.to(camera.position, pos2);
+        timeline.to(camera.position, pos3);
     } else {
         lookControls.lock();
     }
@@ -330,7 +430,26 @@ const tick = () => {
         modelStar.rotation.z -= 0.0025;
     };
 
-    renderer.render(scene, camera);
+    if (threeLogo) {
+        threeLogo.rotation.z += 0.005;
+        threeLogo.rotation.y += 0.007;
+    }
+    
+    if (extraGui.RGBShift === false || extraGui.Pixelate === false || extraGui.Sobel === false) {
+        renderer.render(scene, camera);
+    }
+
+    if (extraGui.RGBShift === true) {
+        effect.render(scene, camera);
+    }
+
+    if (extraGui.Pixelate === true) {
+        composer.render(scene, camera);
+    }
+    
+    if (extraGui.Sobel === true) {
+        sobelComposer.render();
+    }
 
     window.requestAnimationFrame(tick);
 }

@@ -62,11 +62,11 @@ body {
 }
 
 #countdown::before {
-    margin: 0 auto 5rem;
+    margin: 0 auto 1rem;
 }
 
 #countdown::after {
-    margin: 5rem auto 0;
+    margin: 1rem auto 0;
 }
 
 #play {
@@ -193,69 +193,77 @@ body {
 }
 
 @media (min-width: 36em) {
+    /* 576px + */
     #countdown {
         font-size: 2rem;
     }
 
     .txt {
-        font-size: 4rem;
+        font-size: 2.2rem;
     }
 
     .txt-sm {
-        font-size: 3.5rem;
+        font-size: 1.8rem;
     }
 }
 
 @media (min-width: 48em) {
+    /* 768px + */
+    #countdown {
+        font-size: 2.2rem;
+    }
+
+    .txt {
+        font-size: 2.8rem;
+    }
+
+    .txt-sm {
+        font-size: 2.4rem;
+    }
+}
+
+@media (min-width: 62em) {
+    /* 992px + */
     #countdown {
         font-size: 2.8rem;
     }
 
     .txt {
-        font-size: 4.8rem;
+        font-size: 3.4rem;
     }
 
     .txt-sm {
-        font-size: 4rem;
-    }
-}
-
-@media (min-width: 62em) {
-    #countdown {
-        font-size: 3.5rem;
-    }
-
-    .txt {
-        font-size: 5.5rem;
-    }
-
-    .txt-sm {
-        font-size: 4.5rem;
+        font-size: 3rem;
     }
 }
 
 @media (min-width: 75em) {
+    /* 1200px + */
     #countdown {
-        font-size: 4rem;
+        font-size: 3.4rem;
     }
 
     .txt {
-        font-size: 6rem;
+        font-size: 4rem;
     }
 
     .txt-sm {
-        font-size: 5rem;
+        font-size: 3.6rem;
     }
 }
 
 @supports (font: -apple-system-body) and (-webkit-appearance: none) {
     body {
-      font-family: var(--font-backup);
+      font-family: var(--font-console);
     }
 
     #countdown {
         font-size: 1.2rem;
         line-height: 2rem;
+    }
+
+    #play {
+        font-family: var(--font-console);
     }
 
     .txt {
