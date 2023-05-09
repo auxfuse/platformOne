@@ -2,6 +2,9 @@ import './style.css';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { SlowMo } from 'gsap/all';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPixelatedPass } from 'three/examples/jsm/postprocessing/RenderPixelatedPass.js';
+import { AnaglyphEffect } from 'three/examples/jsm/effects/AnaglyphEffect.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -188,9 +191,14 @@ const colorsM = {
     outsideColor: '#e704d4'
 }
 
+const extraGui = {
+    crazyView: false,
+}
+
 let geometry = null;
 let material = null;
 let points = null;
+let effect = null;
 
 const genGalaxy = () => {
 
@@ -280,6 +288,7 @@ gui.add(params, 'randomness').min(0.01).max(2).step(0.01).onFinishChange(genGala
 gui.add(params, 'randomnessPower').min(1).max(10).step(0.1).onFinishChange(genGalaxy);
 gui.addColor(colorsM, 'insideColor').onFinishChange(genGalaxy);
 gui.addColor(colorsM, 'outsideColor').onFinishChange(genGalaxy);
+gui.add(extraGui, 'crazyView');
 
 window.addEventListener('resize', () => {
     sizes.width = window.innerWidth;
@@ -313,6 +322,9 @@ renderer.setSize(
 renderer.setPixelRatio(
     Math.min(window.devicePixelRatio, 2)
 );
+
+effect = new AnaglyphEffect( renderer );
+effect.setSize( sizes.width, sizes.height );
 
 genGalaxy();
 
@@ -383,7 +395,13 @@ const tick = () => {
         threeLogo.rotation.y += 0.007;
     }
 
-    renderer.render(scene, camera);
+    if (extraGui.crazyView) {
+        effect.render(scene, camera);
+    }
+    
+    if (extraGui.crazyView === false) {
+        renderer.render(scene, camera);
+    }
 
     window.requestAnimationFrame(tick);
 }
