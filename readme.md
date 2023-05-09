@@ -20,8 +20,9 @@ npm run build
 ### todo
 
 - [] Loading buffer
+- [] Add reset button for mobile timeline
 - [] Intersect detection and popup between camera and TV model
-- [] add a post processing effect
+- [X] add a post processing effect -- or three --
 
 ### Attributions:
 

@@ -4,6 +4,9 @@ import gsap from 'gsap';
 import { SlowMo } from 'gsap/all';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPixelatedPass } from 'three/examples/jsm/postprocessing/RenderPixelatedPass.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { SobelOperatorShader } from 'three/examples/jsm/shaders/SobelOperatorShader.js';
 import { AnaglyphEffect } from 'three/examples/jsm/effects/AnaglyphEffect.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
@@ -50,7 +53,7 @@ const playGui = document.querySelector("#play-gui");
 
 const gui = new GUI();
 gui.close();
-gui.title('Try Me!');
+gui.title('🚀 Try Me! ☄️');
 
 const sizes = {
     width: window.innerWidth,
@@ -192,7 +195,9 @@ const colorsM = {
 }
 
 const extraGui = {
-    crazyView: false,
+    RGBShift: false,
+    Pixelate: false,
+    Sobel: false
 }
 
 let geometry = null;
@@ -280,15 +285,33 @@ const genGalaxy = () => {
 const axesHelper = new THREE.AxesHelper( 0.5 );
 scene.add( axesHelper );
 
-gui.add(params, 'count').min(100).max(25000).step(100).onFinishChange(genGalaxy);
-gui.add(params, 'radius').min(0.01).max(20).step(0.01).onFinishChange(genGalaxy);
-gui.add(params, 'branches').min(2).max(20).step(1).onFinishChange(genGalaxy);
-gui.add(params, 'spin').min(-5).max(5).step(0.001).onFinishChange(genGalaxy);
-gui.add(params, 'randomness').min(0.01).max(2).step(0.01).onFinishChange(genGalaxy);
-gui.add(params, 'randomnessPower').min(1).max(10).step(0.1).onFinishChange(genGalaxy);
-gui.addColor(colorsM, 'insideColor').onFinishChange(genGalaxy);
-gui.addColor(colorsM, 'outsideColor').onFinishChange(genGalaxy);
-gui.add(extraGui, 'crazyView');
+const galaxyFolder = gui.addFolder( 'Galaxy 🌌' );
+const galaxyPropsFolder = galaxyFolder.addFolder( '>> Galaxy Properties 🔧' );
+galaxyPropsFolder.close();
+galaxyPropsFolder.add(params, 'radius').min(0.01).max(20).step(0.01).onFinishChange(genGalaxy);
+galaxyPropsFolder.add(params, 'branches').min(2).max(20).step(1).onFinishChange(genGalaxy);
+galaxyPropsFolder.add(params, 'spin').min(-5).max(5).step(0.001).onFinishChange(genGalaxy);
+
+const galaxyStarFolder = galaxyFolder.addFolder( '>> Star Properties ⭐' );
+galaxyStarFolder.close();
+galaxyStarFolder.add(params, 'count').min(100).max(25000).step(100).onFinishChange(genGalaxy);
+galaxyStarFolder.add(params, 'randomness').min(0.01).max(2).step(0.01).onFinishChange(genGalaxy);
+galaxyStarFolder.add(params, 'randomnessPower').min(1).max(10).step(0.1).onFinishChange(genGalaxy);
+
+const galaxyColorFolder = galaxyFolder.addFolder( '>> Galaxy Colors 🌈' );
+galaxyColorFolder.close();
+galaxyColorFolder.addColor(colorsM, 'insideColor').onFinishChange(genGalaxy);
+galaxyColorFolder.addColor(colorsM, 'outsideColor').onFinishChange(genGalaxy);
+
+const renderEffectFolder = gui.addFolder( 'Camera Effects 🪄' );
+renderEffectFolder.close();
+renderEffectFolder.add(extraGui, 'RGBShift');
+renderEffectFolder.add(extraGui, 'Pixelate');
+renderEffectFolder.add(extraGui, 'Sobel');
+
+let composer = null;
+let sobelComposer = null;
+let effectSobel = null;
 
 window.addEventListener('resize', () => {
     sizes.width = window.innerWidth;
@@ -299,7 +322,11 @@ window.addEventListener('resize', () => {
 
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-})
+    composer.setSize(sizes.width, sizes.height);
+
+    effectSobel.uniforms[ 'resolution' ].value.x = sizes.width * window.devicePixelRatio;
+    effectSobel.uniforms[ 'resolution' ].value.y = sizes.height * window.devicePixelRatio;
+});
 
 const camera = new THREE.PerspectiveCamera(
     45, sizes.width / sizes.height, 0.1, 500
@@ -323,8 +350,21 @@ renderer.setPixelRatio(
     Math.min(window.devicePixelRatio, 2)
 );
 
+composer = new EffectComposer( renderer );
+const renderPixelatedPass = new RenderPixelatedPass( 3, scene, camera );
+composer.addPass( renderPixelatedPass );
+
+sobelComposer = new EffectComposer( renderer );
+const renderPass = new RenderPass(scene, camera);
+sobelComposer.addPass( renderPass );
+
 effect = new AnaglyphEffect( renderer );
 effect.setSize( sizes.width, sizes.height );
+
+effectSobel = new ShaderPass( SobelOperatorShader );
+effectSobel.uniforms[ 'resolution' ].value.x = sizes.width * window.devicePixelRatio;
+effectSobel.uniforms[ 'resolution' ].value.y = sizes.height * window.devicePixelRatio;
+sobelComposer.addPass( effectSobel );
 
 genGalaxy();
 
@@ -394,13 +434,21 @@ const tick = () => {
         threeLogo.rotation.z += 0.005;
         threeLogo.rotation.y += 0.007;
     }
+    
+    if (extraGui.RGBShift === false || extraGui.Pixelate === false || extraGui.Sobel === false) {
+        renderer.render(scene, camera);
+    }
 
-    if (extraGui.crazyView) {
+    if (extraGui.RGBShift === true) {
         effect.render(scene, camera);
     }
+
+    if (extraGui.Pixelate === true) {
+        composer.render(scene, camera);
+    }
     
-    if (extraGui.crazyView === false) {
-        renderer.render(scene, camera);
+    if (extraGui.Sobel === true) {
+        sobelComposer.render();
     }
 
     window.requestAnimationFrame(tick);
