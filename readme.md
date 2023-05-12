@@ -19,8 +19,10 @@ npm run build
 
 ### todo
 
-- [] Loading buffer
+- [x] Loading buffer
 - [] Add reset button for mobile timeline
+- [] add context to team sizes / prizes / length of hackathon
+- [] create function for gui on button press
 - [] Intersect detection and popup between camera and TV model
 - [X] add a post processing effect -- or three --
 

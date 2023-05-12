@@ -19,6 +19,30 @@ import galaxyFragmentShader from './shaders/galaxy/fragment.glsl';
 import GUI from 'lil-gui';
 
 const isMobile = /Android|iPhone/i.test(navigator.userAgent);
+const loaderEl = document.querySelector('.loader');
+const loaderText = document.querySelector('.loading');
+
+document.onreadystatechange = () => {
+    if (document.readyState === 'complete') {
+        console.log('complete');
+        gsap.to(
+            loaderText, {
+                opacity: 0,
+                duration: 2,
+                display: 'none',
+                immediateRender: false
+            }
+        );
+        gsap.to(
+            loaderEl, {
+                opacity: 0,
+                duration: 1,
+                display: 'none',
+                immediateRender: false
+            }
+        );
+    };
+};
 
 const style = "background-color: #150c21; color: #705df2; font-style: italic; border: 3px solid #78cbf5; font-size: 1.6em; padding: 0.5em;";
 const terminalStyle = "background-color: #262b27; color: #74ad72; border: 2px solid #0b0d0b; font-size: 1.2em; padding: 0.2em;";
@@ -197,7 +221,8 @@ const colorsM = {
 const extraGui = {
     RGBShift: false,
     Pixelate: false,
-    Sobel: false
+    Sobel: false,
+    Psst: function() { window.alert('Team sizes can be 1, 2, or 3 people! 🤜') }
 }
 
 let geometry = null;
@@ -308,6 +333,8 @@ renderEffectFolder.close();
 renderEffectFolder.add(extraGui, 'RGBShift');
 renderEffectFolder.add(extraGui, 'Pixelate');
 renderEffectFolder.add(extraGui, 'Sobel');
+
+gui.add(extraGui, 'Psst');
 
 let composer = null;
 let sobelComposer = null;
