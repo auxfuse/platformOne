@@ -74,6 +74,7 @@ const countdownContainer = document.querySelector('#countdown');
 const timerEl = document.getElementById('timer');
 const playButton = document.querySelector("#play");
 const playGui = document.querySelector("#play-gui");
+const resetButton = document.querySelector("#reset");
 
 const gui = new GUI();
 gui.close();
@@ -412,6 +413,7 @@ let pos3 = {x: 2, y: 1, z: 3, duration: 1, ease: "power1.inOut", delay: 5};
 playButton.addEventListener('click', () => {
     if (isMobile) {
         countdownContainer.style.display = 'none';
+        resetButton.style.opacity = 1;
         timeline.to(camera.position, pos1);
         timeline.to(camera.position, pos2);
         timeline.to(camera.position, pos3);
@@ -430,6 +432,15 @@ lookControls.addEventListener('unlock', () => {
     playButton.style.display = '';
     countdownContainer.style.display = '';
     playGui.style.opacity = 0;
+});
+
+resetButton.addEventListener('click', () => {
+    timeline.clear();
+    gsap.to(camera.position, {
+        x: 3, y: 0, z: 2, duration: 1, ease: "power1"
+    });
+    countdownContainer.style.display = '';
+    resetButton.style.opacity = 0;
 });
 
 const clock = new THREE.Clock();

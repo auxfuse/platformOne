@@ -86,7 +86,7 @@ body {
     margin: 1rem auto 0;
 }
 
-#play {
+.btn {
     background: none;
     border: 1px solid var(--neon);
     border-radius: 0.5rem;
@@ -95,6 +95,9 @@ body {
     padding: 1rem;
     margin: 1rem auto;
     cursor: pointer;
+}
+
+#play {
     position: fixed;
     top: 1rem;
     left: 1rem;
@@ -137,6 +140,13 @@ body {
     font-size: 1.2rem;
     list-style: none;
     padding-left: 1rem;
+}
+
+#reset {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    opacity: 0;
 }
 
 .keybind {
