@@ -217,14 +217,7 @@ const params = {
 const colorsM = {
     insideColor: '#2adfe9',
     outsideColor: '#e704d4'
-}
-
-const extraGui = {
-    RGBShift: false,
-    Pixelate: false,
-    Sobel: false,
-    Psst: function() { window.alert('Team sizes can be 1, 2, or 3 people! 🤜') }
-}
+};
 
 let geometry = null;
 let material = null;
@@ -311,32 +304,6 @@ const genGalaxy = () => {
 const axesHelper = new THREE.AxesHelper( 0.5 );
 scene.add( axesHelper );
 
-const galaxyFolder = gui.addFolder( 'Galaxy 🌌' );
-const galaxyPropsFolder = galaxyFolder.addFolder( '>> Galaxy Properties 🔧' );
-galaxyPropsFolder.close();
-galaxyPropsFolder.add(params, 'radius').min(0.01).max(20).step(0.01).onFinishChange(genGalaxy);
-galaxyPropsFolder.add(params, 'branches').min(2).max(20).step(1).onFinishChange(genGalaxy);
-galaxyPropsFolder.add(params, 'spin').min(-5).max(5).step(0.001).onFinishChange(genGalaxy);
-
-const galaxyStarFolder = galaxyFolder.addFolder( '>> Star Properties ⭐' );
-galaxyStarFolder.close();
-galaxyStarFolder.add(params, 'count').min(100).max(25000).step(100).onFinishChange(genGalaxy);
-galaxyStarFolder.add(params, 'randomness').min(0.01).max(2).step(0.01).onFinishChange(genGalaxy);
-galaxyStarFolder.add(params, 'randomnessPower').min(1).max(10).step(0.1).onFinishChange(genGalaxy);
-
-const galaxyColorFolder = galaxyFolder.addFolder( '>> Galaxy Colors 🌈' );
-galaxyColorFolder.close();
-galaxyColorFolder.addColor(colorsM, 'insideColor').onFinishChange(genGalaxy);
-galaxyColorFolder.addColor(colorsM, 'outsideColor').onFinishChange(genGalaxy);
-
-const renderEffectFolder = gui.addFolder( 'Camera Effects 🪄' );
-renderEffectFolder.close();
-renderEffectFolder.add(extraGui, 'RGBShift');
-renderEffectFolder.add(extraGui, 'Pixelate');
-renderEffectFolder.add(extraGui, 'Sobel');
-
-gui.add(extraGui, 'Psst');
-
 let composer = null;
 let sobelComposer = null;
 let effectSobel = null;
@@ -360,9 +327,9 @@ const camera = new THREE.PerspectiveCamera(
     45, sizes.width / sizes.height, 0.1, 500
 );
 
-camera.position.z = 3;
 camera.position.x = 0;
 camera.position.y = 2;
+camera.position.z = 3;
 scene.add(camera);
 
 const renderer = new THREE.WebGLRenderer({
@@ -437,11 +404,79 @@ lookControls.addEventListener('unlock', () => {
 resetButton.addEventListener('click', () => {
     timeline.clear();
     gsap.to(camera.position, {
-        x: 3, y: 0, z: 2, duration: 1, ease: "power1"
+        x: 0, y: 2, z: 3, duration: 1, ease: "power1"
     });
     countdownContainer.style.display = '';
     resetButton.style.opacity = 0;
 });
+
+let cam1View = {x: 1, y: 2.5, duration: 1, ease: "power2"};
+let cam2View = {x: -4.5, y: 1, z: -4, duration: 1, ease: "power2"};
+let cam3View = {x: 2, y: 1, z: 3, duration: 1, ease: "power2"};
+
+let guiFunc = () => {
+    if (isMobile) {
+        playButton.style.display = 'none';
+    }
+    countdownContainer.style.display = 'none';
+    resetButton.style.opacity = 1;
+    gui.close();
+}
+
+const extraGui = {
+    RGBShift: false,
+    Pixelate: false,
+    Sobel: false,
+    cam1: function () {
+        gsap.to(camera.position, cam1View);
+        guiFunc();
+    },
+    cam2: function () {
+        gsap.to(camera.position, cam2View);
+        guiFunc();
+    },
+    cam3: function () {
+        gsap.to(camera.position, cam3View);
+        guiFunc();
+    },
+    Psst: function() { 
+        window.alert('Team sizes can be 1, 2, or 3 people! 🤜');
+    }
+};
+
+const galaxyFolder = gui.addFolder('Galaxy 🌌');
+const galaxyPropsFolder = galaxyFolder.addFolder('>> Galaxy Properties 🔧');
+galaxyPropsFolder.close();
+galaxyPropsFolder.add(params, 'radius').min(0.01).max(20).step(0.01).onFinishChange(genGalaxy);
+galaxyPropsFolder.add(params, 'branches').min(2).max(20).step(1).onFinishChange(genGalaxy);
+galaxyPropsFolder.add(params, 'spin').min(-5).max(5).step(0.001).onFinishChange(genGalaxy);
+
+const galaxyStarFolder = galaxyFolder.addFolder('>> Star Properties ⭐');
+galaxyStarFolder.close();
+galaxyStarFolder.add(params, 'count').min(100).max(25000).step(100).onFinishChange(genGalaxy);
+galaxyStarFolder.add(params, 'randomness').min(0.01).max(2).step(0.01).onFinishChange(genGalaxy);
+galaxyStarFolder.add(params, 'randomnessPower').min(1).max(10).step(0.1).onFinishChange(genGalaxy);
+
+const galaxyColorFolder = galaxyFolder.addFolder('>> Galaxy Colors 🌈');
+galaxyColorFolder.close();
+galaxyColorFolder.addColor(colorsM, 'insideColor').onFinishChange(genGalaxy);
+galaxyColorFolder.addColor(colorsM, 'outsideColor').onFinishChange(genGalaxy);
+
+const renderEffectFolder = gui.addFolder('Camera Effects 🪄');
+renderEffectFolder.close();
+renderEffectFolder.add(extraGui, 'RGBShift');
+renderEffectFolder.add(extraGui, 'Pixelate');
+renderEffectFolder.add(extraGui, 'Sobel');
+
+const cameraFolder = gui.addFolder('Camera Views 🪟');
+cameraFolder.close();
+cameraFolder.add(extraGui, 'cam1').name('Rocket View 🚀');
+cameraFolder.add(extraGui, 'cam2').name('CRT View 📺');
+cameraFolder.add(extraGui, 'cam3').name('Console View 💾');
+
+const secretsFolder = gui.addFolder('Secrets 🙈');
+secretsFolder.close();
+secretsFolder.add(extraGui, 'Psst');
 
 const clock = new THREE.Clock();
 
