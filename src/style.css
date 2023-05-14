@@ -31,6 +31,23 @@ body {
     margin-top: 2rem;
 }
 
+.loader {
+    background-color: var(--bg);
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading {
+    font-size: 2rem;
+    letter-spacing: 1ch;
+}
+
 #countdown {
     min-height: 100vh;
     display: -webkit-box;
@@ -69,7 +86,7 @@ body {
     margin: 1rem auto 0;
 }
 
-#play {
+.btn {
     background: none;
     border: 1px solid var(--neon);
     border-radius: 0.5rem;
@@ -78,6 +95,9 @@ body {
     padding: 1rem;
     margin: 1rem auto;
     cursor: pointer;
+}
+
+#play {
     position: fixed;
     top: 1rem;
     left: 1rem;
@@ -120,6 +140,13 @@ body {
     font-size: 1.2rem;
     list-style: none;
     padding-left: 1rem;
+}
+
+#reset {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    opacity: 0;
 }
 
 .keybind {
