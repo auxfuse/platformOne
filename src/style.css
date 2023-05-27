@@ -89,8 +89,7 @@ body {
     pointer-events: none;
 }
 
-#countdown::before, #countdown::after,
-#details-info::after {
+#countdown::before, #countdown::after {
     content: '';
     display: block;
     height: 1px;
@@ -107,18 +106,17 @@ body {
     font-family: var(--font-console);
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     font-size: 1.4rem;
+    background-color: rgba(42, 240, 92, 0.1);
+    border-radius: 1rem;
+    margin-bottom: 3rem;
+    padding: 1rem;
 }
 
-#countdown::after, #details-info::after {
+#countdown::after {
     margin: 1rem auto 0;
-}
-
-#register_form {
-    border: 1px solid red;
-    text-align: left;
-    width: 50%;
 }
 
 .btn {
@@ -133,7 +131,7 @@ body {
 }
 
 #play {
-    position: fixed;
+    position: absolute;
     top: 1rem;
     left: 1rem;
 }
@@ -202,6 +200,7 @@ body {
     min-height: 100vh;
     width: 100%;
     pointer-events: none;
+    z-index: -1;
 }
 
 .clr-link-animate {
