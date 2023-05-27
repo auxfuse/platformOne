@@ -31,9 +31,24 @@ body {
     margin-top: 2rem;
 }
 
-.my-1 {
+.mx-1 {
     margin-left: 1rem;
     margin-right: 1rem;
+}
+
+.mx-2 {
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+.mx-3 {
+    margin-left: 3rem;
+    margin-right: 3rem;
+}
+
+.my-1 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .loader {
@@ -74,7 +89,8 @@ body {
     pointer-events: none;
 }
 
-#countdown::before, #countdown::after {
+#countdown::before, #countdown::after,
+#details-info::after {
     content: '';
     display: block;
     height: 1px;
@@ -92,10 +108,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 2rem;
+    font-size: 1.4rem;
 }
 
-#countdown::after {
+#countdown::after, #details-info::after {
     margin: 1rem auto 0;
 }
 
@@ -186,6 +202,13 @@ body {
     min-height: 100vh;
     width: 100%;
     pointer-events: none;
+}
+
+.clr-link-animate {
+    color: var(--neon);
+    text-decoration: none;
+    -webkit-animation: clr-change 10s infinite ease-in-out;
+            animation: clr-change 10s infinite ease-in-out;
 }
 
 .txt {
