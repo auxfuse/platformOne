@@ -24,7 +24,6 @@ const loaderText = document.querySelector('.loading');
 
 document.onreadystatechange = () => {
     if (document.readyState === 'complete') {
-        console.log('complete');
         gsap.to(
             loaderText, {
                 opacity: 0,
@@ -170,7 +169,6 @@ const textContent = '> console...';
 fontLoader.load(
     '/fonts/helvetiker_regular.typeface.json',
     (font) => {
-        console.log('font load');
         const textGeometry = new TextGeometry(
             textContent, {
                 font: font,
@@ -528,42 +526,3 @@ const tick = () => {
 }
 
 tick();
-
-let timer = () => {
-    let end = new Date("May 27, 2023 18:00:00 GMT");
-    let endTime = (Date.parse(end)) / 1000;
-
-    let now = new Date();
-    let nowTime = (Date.parse(now)) / 1000;
-
-    let timeLeft = endTime - nowTime;
-
-    let days = Math.floor(
-        timeLeft / 86400
-    );
-    let hours = Math.floor(
-        (timeLeft - (days * 86400)) / 3600
-    );
-    let mins = Math.floor(
-        (timeLeft - (days * 86400) - (hours * 3600)) / 60
-    );
-    let secs = Math.floor(
-        (timeLeft - (days * 86400) - (hours * 3600) - (mins * 60))
-    );
-
-    if (hours < "10") {
-        hours = "0" + hours;
-    }
-    if (mins < "10") {
-        mins = "0" + mins;
-    }
-    if (secs < "10") {
-        secs = "0" + secs;
-    }
-
-    timerEl.textContent = `${days} days / ${hours} hrs / ${mins} mins / ${secs} secs`;
-};
-
-setInterval(function() {
-    timer();
-}, 1000);
