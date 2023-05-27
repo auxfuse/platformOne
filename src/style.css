@@ -31,6 +31,11 @@ body {
     margin-top: 2rem;
 }
 
+.my-1 {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
 .loader {
     background-color: var(--bg);
     height: 100vh;
@@ -82,8 +87,22 @@ body {
     margin: 0 auto 1rem;
 }
 
+#details {
+    font-family: var(--font-console);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2rem;
+}
+
 #countdown::after {
     margin: 1rem auto 0;
+}
+
+#register_form {
+    border: 1px solid red;
+    text-align: left;
+    width: 50%;
 }
 
 .btn {

@@ -33,10 +33,40 @@
     <button id="reset" class="btn">Reset ◀️</button>
     
     <div id="countdown">
-        <p class="txt">DevGames!</p>
-        <p class="txt-sm mt-1">Register in</p>
-        <div id="timer" class="mt-2"></div>
+        <h1 class="txt">DevGames!</h1>
+        <h2 class="txt-sm mt-1">Registrations are live.</h2>
+        <!-- <div id="timer" class="mt-2"></div> -->
         <p class="txt-sm mt-2">An annual Hackathon to compete in!</p>
+    </div>
+
+    <div id="details">
+
+        <h3>The Event & Task</h3>
+
+        <p class="mt-2 my-1">
+            Simply put, Hackathons are typically time-sensitive and collaborative events.
+            But this event will run from 9th of June through to the 23rd of June.
+            That's two whole weeks to create something.👏 You can work alone, or in a team of up to 3 people! Form your own team of people you know or be your own Main Character.🧙‍♀️
+        </p>
+
+
+        <form class="mt-1" action="" id="register_form">
+
+            <label for="teamName">Team Name:
+                <input type="text" id="teamName" required>
+            </label>
+    
+            <label for="teamSize">Team Size:
+                <input type="number" id="teamSize" min=1 max=3 inputMode="numeric" pattern="[0-9]+" required>
+            </label>
+    
+            <label for="teamSize">Your Email:
+                <input type="email" id="email" required>
+            </label>
+    
+            <input type="submit" value="Regsiter">
+    
+        </form>
     </div>
 
     <script type="module" src="./script.js"></script>
