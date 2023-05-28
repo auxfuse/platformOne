@@ -70,7 +70,7 @@ console.log(`%c${transcript}`, terminalStyle);
 
 const canvas = document.querySelector('canvas.webgl');
 const countdownContainer = document.querySelector('#countdown');
-const timerEl = document.getElementById('timer');
+const detailsContainer = document.querySelector('#details');
 const playButton = document.querySelector("#play");
 const playGui = document.querySelector("#play-gui");
 const resetButton = document.querySelector("#reset");
@@ -378,6 +378,7 @@ let pos3 = {x: 2, y: 1, z: 3, duration: 1, ease: "power1.inOut", delay: 5};
 playButton.addEventListener('click', () => {
     if (isMobile) {
         countdownContainer.style.display = 'none';
+        detailsContainer.style.display = 'none';
         resetButton.style.opacity = 1;
         timeline.to(camera.position, pos1);
         timeline.to(camera.position, pos2);
@@ -390,12 +391,14 @@ playButton.addEventListener('click', () => {
 lookControls.addEventListener('lock', () => {
     playButton.style.display = 'none';
     countdownContainer.style.display = 'none';
+    detailsContainer.style.display = 'none';
     playGui.style.opacity = 1;
 });
 
 lookControls.addEventListener('unlock', () => {
     playButton.style.display = '';
     countdownContainer.style.display = '';
+    detailsContainer.style.display = '';
     playGui.style.opacity = 0;
 });
 
@@ -405,6 +408,7 @@ resetButton.addEventListener('click', () => {
         x: 0, y: 2, z: 3, duration: 1, ease: "power1"
     });
     countdownContainer.style.display = '';
+    detailsContainer.style.display = '';
     resetButton.style.opacity = 0;
 });
 
@@ -417,6 +421,7 @@ let guiFunc = () => {
         playButton.style.display = 'none';
     }
     countdownContainer.style.display = 'none';
+    detailsContainer.style.display = 'none';
     resetButton.style.opacity = 1;
     gui.close();
 }
