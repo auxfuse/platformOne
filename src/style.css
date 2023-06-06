@@ -3,6 +3,7 @@
 :root {
     --bg: rgb(22, 21, 21);
     --neon: rgb(42, 240, 92);
+    --neon-light: rgb(20, 245, 8);
 
     --font: 'Nabla', sans-serif;
     --font-backup: 'Press Start 2P', sans-serif;
@@ -21,6 +22,11 @@ body {
     background: var(--bg);
     color: var(--neon);
     position: relative;
+}
+
+::selection {
+    color: var(--bg);
+    background-color: var(--neon-light);
 }
 
 .mt-1 {
@@ -59,6 +65,15 @@ body {
 .my-3 {
     margin-top: 3rem;
     margin-bottom: 3rem;
+}
+
+.underline::after {
+    content: '';
+    display: block;
+    margin: 1.5rem 0;
+    height: 1px;
+    width: 50%;
+    background-color: var(--neon);
 }
 
 .loader {
@@ -135,8 +150,16 @@ body {
     list-style-position: inside;
 }
 
-.li::marker {
+.examples-li::marker {
     content: '🕹️';
+}
+
+.resources-li::marker {
+    content: '📑';
+}
+
+.community-li::marker {
+    content: '🌆';
 }
 
 #registration_link {
