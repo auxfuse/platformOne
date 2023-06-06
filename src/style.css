@@ -51,6 +51,16 @@ body {
     margin-bottom: 1rem;
 }
 
+.my-2 {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.my-3 {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
 .loader {
     background-color: var(--bg);
     height: 100vh;
@@ -113,6 +123,20 @@ body {
     border-radius: 1rem;
     margin: 3rem 1rem;
     padding: 1rem;
+}
+
+.list > span {
+    display: block;
+    margin: 1rem 0;
+}
+
+.list > li {
+    margin: 0.5rem 0;
+    list-style-position: inside;
+}
+
+.li::marker {
+    content: '🕹️';
 }
 
 #registration_link {
