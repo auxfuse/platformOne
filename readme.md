@@ -54,9 +54,19 @@ ReSync by Ghast PyGame/OpenGL - https://ghastly.itch.io/resync
 
 resources
 
+Unreal Engine / Unity / Godot
 
+Construct
+
+PhaserJS / KaboomJS
+
+PyGame
+
+ThreeJS
 
 communities
+
+Codu / Bruno Simon / Hacktoberfest / GameDev League / Unity etc
 
 
 
